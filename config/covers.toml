@@ -1,0 +1,18 @@
+[config]
+output-size = 800
+
+[[cover]]
+playlist-name = "Yamaoka Work"
+bg-image = "sh-office.jpg"
+colour-gradient = "blue"
+
+[[cover]]
+playlist-name = "Triage"
+bg-image = "cd-pile.jpg"
+
+[[cover]]
+playlist-name = "Google Play Thumbs Up"
+bg-image = "gpm.png"
+bg-colour = "orange"
+scale = 70
+position = "center"
