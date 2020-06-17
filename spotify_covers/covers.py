@@ -7,8 +7,8 @@ import sys
 import os
 
 
-logo_padding_percentage = 4.1
-logo_size_percentage = 7.1
+logo_padding_percentage = 3.865
+logo_size_percentage = 7.4
 
 
 def get_padded_location(output_size):
@@ -30,6 +30,10 @@ def get_padded_size(output_size):
 
 def get_test_image_1():
     return Image.open(os.path.join(get_project_root(), 'images', 'global', 'test_1.jpg'))
+
+
+def get_test_image_1_solid():
+    return Image.open(os.path.join(get_project_root(), 'images', 'global', 'test_1_solid.jpg'))
 
 
 def get_test_image_2():
@@ -71,7 +75,7 @@ def main():
             sys.exit(1)
 
         cover_image.show()
-        Image.blend(cover_image, test_image, 1).show()
+        Image.blend(cover_image, test_image, 0.85).show()
 
 
 if __name__ == "__main__":
