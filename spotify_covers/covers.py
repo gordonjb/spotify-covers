@@ -9,9 +9,10 @@ import os
 
 logo_padding_percentage = 3.865
 logo_size_percentage = 7.4
+logo_transparency_percentage = 50
 
 
-def get_padded_location(output_size):
+def get_logo_location(output_size):
     logo_padding_ratio = logo_padding_percentage/100
     print(logo_padding_ratio)
     padding_px = int(logo_padding_ratio * output_size[0])
@@ -19,13 +20,17 @@ def get_padded_location(output_size):
     return (padding_px, padding_px)
 
 
-def get_padded_size(output_size):
+def get_logo_size(output_size):
     logo_size_ratio = logo_size_percentage/100
     print(logo_size_ratio)
     size_px = int(logo_size_ratio * output_size[0])
     print(size_px)
     print(logo_size_ratio * output_size[0])
     return (size_px, size_px)
+
+
+def get_logo_alpha_int():
+    return int((logo_transparency_percentage * 255)/100)
 
 
 def get_test_image_1():
@@ -44,6 +49,10 @@ def get_white_logo():
     return Image.open(os.path.join(get_project_root(), 'images', 'global', 'Spotify_Icon_RGB_White.png'))
 
 
+def get_black_logo():
+    return Image.open(os.path.join(get_project_root(), 'images', 'global', 'Spotify_Icon_RGB_Black.png'))
+
+
 def get_cover_image(cover):
     return Image.open(os.path.join(get_project_root(), 'images', cover['bg-image']))
 
@@ -54,10 +63,16 @@ def main():
 
     output_size = (doc['config']['output-size'], doc['config']['output-size'])
 
-    spotify_logo = get_white_logo()
-    spotify_logo = ImageOps.fit(
-        spotify_logo, get_padded_size(output_size), Image.ANTIALIAS)
-    padded_logo_location = get_padded_location(output_size)
+    logo_size = get_logo_size(output_size)
+    padded_logo_location = get_logo_location(output_size)
+    logo_alpha = get_logo_alpha_int()
+
+    spotify_logo_w = get_white_logo()
+    spotify_logo_w = ImageOps.fit(spotify_logo_w, logo_size, Image.ANTIALIAS)
+    spotify_logo_w.putalpha(logo_alpha)
+    spotify_logo_b = get_black_logo()
+    spotify_logo_b = ImageOps.fit(spotify_logo_b, logo_size, Image.ANTIALIAS)
+    spotify_logo_b.putalpha(logo_alpha)
 
     test_image = get_test_image_1()
     test_image = ImageOps.fit(
@@ -68,7 +83,10 @@ def main():
             cover_image = get_cover_image(cover)
             cover_image = ImageOps.fit(
                 cover_image, output_size, Image.ANTIALIAS)
-            cover_image.paste(spotify_logo, padded_logo_location, spotify_logo)
+            if cover.get('use-black-logo'):
+                cover_image.paste(spotify_logo_b, padded_logo_location, spotify_logo_b)
+            else:
+                cover_image.paste(spotify_logo_w, padded_logo_location, spotify_logo_w)
 
         except IOError:
             print("Unable to load image")
