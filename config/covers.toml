@@ -11,10 +11,10 @@ playlist-name = "Triage"
 bg-image = "cd-pile.jpg"
 
 [[cover]]
-playlist-name = "Google Play Thumbs Up"
+playlist-name = "\u1F44D"
 bg-image = "gpm.png"
 bg-colour = "white"
 colour-gradient = "orange"  
-scale = 70
+scale = 50
 position = "center"
-use-black-logo = true
+use-white-logo = true
