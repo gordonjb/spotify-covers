@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageFont, ImageDraw
 from tomlkit import loads
 from spotify_covers.utils import get_project_root
 import sys
@@ -9,7 +9,7 @@ import os
 
 logo_padding_percentage = 3.865
 logo_size_percentage = 7.4
-logo_transparency_percentage = 15
+logo_transparency_percentage = 20
 
 
 def get_logo_location(output_size):
@@ -46,11 +46,16 @@ def resize_and_fade_logo(logo, logo_size, output_size, padded_logo_location):
     return base
 
 
-def scale_and_pad_cover(cover_image, output_size, scale):
+def scale_and_pad_cover(cover_image, output_size, scale, position):
     padded = ImageOps.pad(cover_image, get_scaled_size(output_size, scale), Image.ANTIALIAS)
     base = Image.new('RGBA', output_size, (0, 0, 0, 0))
     s_width, s_height = padded.size
-    base.paste(padded, (int(output_size[0]/2 - s_width/2), int(output_size[0]/2 - s_height/2)), padded)
+    if position == "bottom":
+        # Align towards the middle bottom of the image
+        base.paste(padded, (int(output_size[0]/2 - s_width/2), int(output_size[0]*7/8 - s_height*7/8)), padded)
+    else:
+        # Center align
+        base.paste(padded, (int(output_size[0]/2 - s_width/2), int(output_size[0]/2 - s_height/2)), padded)
     return base
 
 
@@ -72,6 +77,10 @@ def get_white_logo():
 
 def get_black_logo():
     return Image.open(os.path.join(get_project_root(), 'images', 'global', 'Spotify_Icon_RGB_Black.png'))
+
+
+def get_gradient(gradient_name):
+    return Image.open(os.path.join(get_project_root(), 'images', 'gradients', gradient_name + '.jpg'))
 
 
 def get_cover_image(cover):
@@ -103,7 +112,7 @@ def main():
             # If scale defined, resize cover to scaled size, using pad to
             # avoid any cropping, otherwise scale to output size to fit
             if cover.get('scale'):
-                cover_image = scale_and_pad_cover(cover_image, output_size, cover.get('scale'))
+                cover_image = scale_and_pad_cover(cover_image, output_size, cover.get('scale'), cover.get('position'))
             else:
                 cover_image = ImageOps.fit(
                     cover_image, output_size, Image.ANTIALIAS)
@@ -119,12 +128,24 @@ def main():
                 base = Image.new('RGBA', output_size, cover.get('bg-colour'))
                 cover_image = Image.alpha_composite(base, cover_image)
 
+            if cover.get('colour-gradient'):
+                if not cover.get('do-not-greyscale', False):
+                    cover_image = cover_image.convert('L').convert('RGBA')
+                gradient_image = ImageOps.fit(get_gradient(cover.get('colour-gradient')), output_size, Image.ANTIALIAS)
+                gradient_image.putalpha(255)
+                cover_image = Image.blend(cover_image, gradient_image, 0.7)
+
             # Composite the logo watermark on top, black logo as default
             if cover.get('use-white-logo'):
                 cover_image = Image.alpha_composite(cover_image, w_base)
             else:
                 cover_image = Image.alpha_composite(cover_image, b_base)
 
+            # Write text
+            if cover.get('playlist-name'):
+                font = ImageFont.truetype('CircularStd-Bold.otf', size=150)
+                draw = ImageDraw.Draw(cover_image)
+                draw.text((0, output_size[0]/2), cover.get('playlist-name'), cover.get('font-colour', 'white'), font)
         except IOError:
             print("Unable to load image")
             sys.exit(1)

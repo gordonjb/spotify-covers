@@ -4,17 +4,19 @@ output-size = 1000
 [[cover]]
 playlist-name = "Yamaoka Work"
 bg-image = "sh-office.jpg"
-colour-gradient = "blue"
 
 [[cover]]
 playlist-name = "Triage"
 bg-image = "cd-pile.jpg"
+colour-gradient = "dull"
+use-white-logo = true
+do-not-greyscale = true
 
 [[cover]]
-playlist-name = "\u1F44D"
+playlist-name = "Thumbs Up"
 bg-image = "gpm.png"
 bg-colour = "white"
-colour-gradient = "orange"  
+colour-gradient = "orange_coral"
 scale = 50
-position = "center"
+position = "bottom"
 use-white-logo = true
