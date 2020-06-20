@@ -1,5 +1,5 @@
 [config]
-output-size = 1000
+output-size = 800
 
 [[cover]]
 main-text = "Yamaoka Work"
@@ -11,7 +11,7 @@ bg-image = "cd-pile.jpg"
 colour-gradient = "dull"
 use-white-logo = true
 do-not-greyscale = true
-font-colour = "black"
+#font-colour = "black"
 
 [[cover]]
 main-text = "Thumbs Up"

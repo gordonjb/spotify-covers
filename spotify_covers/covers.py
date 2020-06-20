@@ -81,31 +81,31 @@ def resize_and_show_test_image(test_image, output_size):
 
 
 def get_test_image_1():
-    return Image.open(os.path.join(get_project_root(), 'images', 'global', 'test_1.jpg'))
+    return Image.open(os.path.join(get_project_root(), 'images', 'test', 'test_1.jpg'))
 
 
 def get_test_image_1_solid():
-    return Image.open(os.path.join(get_project_root(), 'images', 'global', 'test_1_solid.jpg'))
+    return Image.open(os.path.join(get_project_root(), 'images', 'test', 'test_1_solid.jpg'))
 
 
 def get_test_image_2():
-    return Image.open(os.path.join(get_project_root(), 'images', 'global', 'test_2.jpg'))
+    return Image.open(os.path.join(get_project_root(), 'images', 'test', 'test_2.jpg'))
 
 
 def get_test_image_3():
-    return Image.open(os.path.join(get_project_root(), 'images', 'global', 'test_3.jpg'))
+    return Image.open(os.path.join(get_project_root(), 'images', 'test', 'test_3.jpg'))
 
 
 def get_white_logo():
-    return Image.open(os.path.join(get_project_root(), 'images', 'global', 'Spotify_Icon_RGB_White.png'))
+    return Image.open(os.path.join(get_project_root(), 'images', 'logo', 'Spotify_Icon_RGB_White.png'))
 
 
 def get_black_logo():
-    return Image.open(os.path.join(get_project_root(), 'images', 'global', 'Spotify_Icon_RGB_Black.png'))
+    return Image.open(os.path.join(get_project_root(), 'images', 'logo', 'Spotify_Icon_RGB_Black.png'))
 
 
 def get_gradient(gradient_name):
-    return Image.open(os.path.join(get_project_root(), 'images', 'gradients', gradient_name + '.jpg'))
+    return Image.open(os.path.join(get_project_root(), 'images', 'gradient', gradient_name + '.jpg'))
 
 
 def get_cover_image(cover):
@@ -124,7 +124,7 @@ def main():
     w_base = resize_and_fade_logo(get_white_logo(), logo_size, output_size, padded_logo_location)
     b_base = resize_and_fade_logo(get_black_logo(), logo_size, output_size, padded_logo_location)
 
-    another_test_image = resize_and_show_test_image(get_test_image_3(), output_size)
+    #another_test_image = resize_and_show_test_image(get_test_image_3(), output_size)
 
     for cover in doc['cover']:
         try:
@@ -183,7 +183,7 @@ def main():
             sys.exit(1)
 
         cover_image.show()
-        Image.blend(cover_image, another_test_image, 0.65).show()
+        #Image.blend(cover_image, another_test_image, 0.65).show()
 
 
 if __name__ == "__main__":
