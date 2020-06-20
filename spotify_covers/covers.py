@@ -10,6 +10,19 @@ import os
 logo_padding_percentage = 3.865
 logo_size_percentage = 7.4
 logo_transparency_percentage = 20
+max_text_width_percentage = 95
+max_text_height_percentage = 8.5
+text_height_example_string = "Genre Glitch"
+
+
+def get_text_area(output_size):
+    max_text_area_ratio = max_text_width_percentage/100
+    return int(max_text_area_ratio * output_size[0])
+
+
+def get_text_height(output_size):
+    max_text_area_ratio = max_text_height_percentage/100
+    return int(max_text_area_ratio * output_size[0])
 
 
 def get_logo_location(output_size):
@@ -28,7 +41,7 @@ def get_logo_alpha_int():
     return int((logo_transparency_percentage * 255)/100)
 
 
-def get_logo_alpha_percent():
+def get_logo_alpha_ratio():
     return logo_transparency_percentage/100
 
 
@@ -42,7 +55,7 @@ def resize_and_fade_logo(logo, logo_size, output_size, padded_logo_location):
     logo = ImageOps.fit(logo, logo_size, Image.ANTIALIAS)
     base = Image.new('RGBA', output_size, (0, 0, 0, 0))
     base.paste(logo, padded_logo_location, logo)
-    base = Image.blend(Image.new('RGBA', output_size, (0, 0, 0, 0)), base, get_logo_alpha_percent())
+    base = Image.blend(Image.new('RGBA', output_size, (0, 0, 0, 0)), base, get_logo_alpha_ratio())
     return base
 
 
@@ -59,6 +72,14 @@ def scale_and_pad_cover(cover_image, output_size, scale, position):
     return base
 
 
+def resize_and_show_test_image(test_image, output_size):
+    test_image = ImageOps.fit(
+                test_image, output_size, Image.ANTIALIAS)
+    test_image.putalpha(255)
+    test_image.show()
+    return test_image
+
+
 def get_test_image_1():
     return Image.open(os.path.join(get_project_root(), 'images', 'global', 'test_1.jpg'))
 
@@ -69,6 +90,10 @@ def get_test_image_1_solid():
 
 def get_test_image_2():
     return Image.open(os.path.join(get_project_root(), 'images', 'global', 'test_2.jpg'))
+
+
+def get_test_image_3():
+    return Image.open(os.path.join(get_project_root(), 'images', 'global', 'test_3.jpg'))
 
 
 def get_white_logo():
@@ -99,11 +124,7 @@ def main():
     w_base = resize_and_fade_logo(get_white_logo(), logo_size, output_size, padded_logo_location)
     b_base = resize_and_fade_logo(get_black_logo(), logo_size, output_size, padded_logo_location)
 
-    test_image = get_test_image_1()
-    test_image = ImageOps.fit(
-                test_image, output_size, Image.ANTIALIAS)
-    test_image.putalpha(255)
-    test_image.show()
+    another_test_image = resize_and_show_test_image(get_test_image_3(), output_size)
 
     for cover in doc['cover']:
         try:
@@ -142,15 +163,27 @@ def main():
                 cover_image = Image.alpha_composite(cover_image, b_base)
 
             # Write text
-            if cover.get('playlist-name'):
-                font = ImageFont.truetype('CircularStd-Bold.otf', size=150)
+            if cover.get('main-text'):
+                size = 1
+                font = ImageFont.truetype('CircularStd-Bold.otf', size)
+                max_area = get_text_area(output_size)
+                max_height = get_text_height(output_size)
+                main_text_line = cover.get('main-text')
+                # Calculate maximum font size. Increase size until width of text exceeds defined max area,
+                # or height of an example text with no dangling letters, e.g. "Genre Glitch", at that size
+                # exceeds defined maximum.
+                while (font.getsize(main_text_line)[0] < max_area and font.getsize(text_height_example_string)[1] < max_height):
+                    size += 1
+                    font = ImageFont.truetype('CircularStd-Bold.otf', size)
                 draw = ImageDraw.Draw(cover_image)
-                draw.text((0, output_size[0]/2), cover.get('playlist-name'), cover.get('font-colour', 'white'), font)
+                text_location = (int(output_size[0]/2 - font.getsize(main_text_line)[0]/2), int(output_size[1]*0.214 - font.getsize(text_height_example_string)[1]*0.214))
+                draw.text(text_location, main_text_line, cover.get('font-colour', 'white'), font)
         except IOError:
             print("Unable to load image")
             sys.exit(1)
 
         cover_image.show()
+        Image.blend(cover_image, another_test_image, 0.65).show()
 
 
 if __name__ == "__main__":

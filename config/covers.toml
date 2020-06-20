@@ -2,18 +2,19 @@
 output-size = 1000
 
 [[cover]]
-playlist-name = "Yamaoka Work"
+main-text = "Yamaoka Work"
 bg-image = "sh-office.jpg"
 
 [[cover]]
-playlist-name = "Triage"
+main-text = "Triage"
 bg-image = "cd-pile.jpg"
 colour-gradient = "dull"
 use-white-logo = true
 do-not-greyscale = true
+font-colour = "black"
 
 [[cover]]
-playlist-name = "Thumbs Up"
+main-text = "Thumbs Up"
 bg-image = "gpm.png"
 bg-colour = "white"
 colour-gradient = "orange_coral"
