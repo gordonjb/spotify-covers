@@ -80,6 +80,14 @@ def resize_and_show_test_image(test_image, output_size):
     return test_image
 
 
+def calculate_font_location(output_size, font, main_text_line):
+    return (int(output_size[0]/2 - font.getsize(main_text_line)[0]/2), int(output_size[1]*0.214 - font.getsize(text_height_example_string)[1]*0.214))
+
+
+def calculate_centred_font_location(output_size, font, main_text_line):
+    return (int(output_size[0]/2 - font.getsize(main_text_line)[0]/2), int(output_size[1]/2 - font.getsize(main_text_line)[1]/2))
+
+
 def get_test_image_1():
     return Image.open(os.path.join(get_project_root(), 'images', 'test', 'test_1.jpg'))
 
@@ -130,6 +138,11 @@ def main():
         try:
             cover_image = get_cover_image(cover)
 
+            # Add alpha channel so mode matches images with transparency,
+            # allowing us to use alpha_composite
+            if cover_image.mode == 'RGB':
+                cover_image.putalpha(255)
+
             # If scale defined, resize cover to scaled size, using pad to
             # avoid any cropping, otherwise scale to output size to fit
             if cover.get('scale'):
@@ -137,11 +150,6 @@ def main():
             else:
                 cover_image = ImageOps.fit(
                     cover_image, output_size, Image.ANTIALIAS)
-
-            # Add alpha channel so mode matches images with transparency,
-            # allowing us to use alpha_composite
-            if cover_image.mode == 'RGB':
-                cover_image.putalpha(255)
 
             # If a background colour is defined, create a new image with
             # that colour, and composite the cover onto it.
@@ -154,7 +162,8 @@ def main():
                     cover_image = cover_image.convert('L').convert('RGBA')
                 gradient_image = ImageOps.fit(get_gradient(cover.get('colour-gradient')), output_size, Image.ANTIALIAS)
                 gradient_image.putalpha(255)
-                cover_image = Image.blend(cover_image, gradient_image, 0.7)
+                opacity = cover.get('gradient-opacity', 70)/100
+                cover_image = Image.blend(cover_image, gradient_image, opacity)
 
             # Composite the logo watermark on top, black logo as default
             if cover.get('use-white-logo'):
@@ -176,7 +185,10 @@ def main():
                     size += 1
                     font = ImageFont.truetype('CircularStd-Bold.otf', size)
                 draw = ImageDraw.Draw(cover_image)
-                text_location = (int(output_size[0]/2 - font.getsize(main_text_line)[0]/2), int(output_size[1]*0.214 - font.getsize(text_height_example_string)[1]*0.214))
+                if cover.get('centre-text'):
+                    text_location = calculate_centred_font_location(output_size, font, main_text_line)
+                else:
+                    text_location = calculate_font_location(output_size, font, main_text_line)
                 draw.text(text_location, main_text_line, cover.get('font-colour', 'white'), font)
         except IOError:
             print("Unable to load image")

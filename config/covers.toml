@@ -3,21 +3,27 @@ output-size = 800
 
 [[cover]]
 main-text = "Yamaoka Work"
-bg-image = "sh-office.jpg"
+bg-image = "sh-toilet2.jpg"
+colour-gradient = "dull"
+gradient-opacity=5
+do-not-greyscale = true
+#font-colour = "#C9D6FF"
+font-colour = "#E2E2E2"
 
 [[cover]]
 main-text = "Triage"
+centre-text = true
 bg-image = "cd-pile.jpg"
-colour-gradient = "dull"
+colour-gradient = "lizard"
 use-white-logo = true
-do-not-greyscale = true
+#do-not-greyscale = true
 #font-colour = "black"
 
 [[cover]]
 main-text = "Thumbs Up"
 bg-image = "gpm.png"
 bg-colour = "white"
-colour-gradient = "orange_coral"
+colour-gradient = "orange-coral"
 scale = 50
 position = "bottom"
 use-white-logo = true
