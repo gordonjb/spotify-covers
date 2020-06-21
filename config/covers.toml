@@ -27,3 +27,10 @@ colour-gradient = "orange-coral"
 scale = 50
 position = "bottom"
 use-white-logo = true
+
+[[cover]]
+main-text = "Have yourself\na tolerable Christmas"
+bg-image = "christmas-tree.jpg"
+colour-gradient = "christmas"
+#font-colour = "#C9D6FF"
+do-not-greyscale = true

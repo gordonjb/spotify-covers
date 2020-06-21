@@ -10,7 +10,7 @@ import os
 logo_padding_percentage = 3.865
 logo_size_percentage = 7.4
 logo_transparency_percentage = 20
-max_text_width_percentage = 95
+max_text_width_percentage = 85
 max_text_height_percentage = 8.5
 text_height_example_string = "Genre Glitch"
 
@@ -80,12 +80,12 @@ def resize_and_show_test_image(test_image, output_size):
     return test_image
 
 
-def calculate_font_location(output_size, font, main_text_line):
-    return (int(output_size[0]/2 - font.getsize(main_text_line)[0]/2), int(output_size[1]*0.214 - font.getsize(text_height_example_string)[1]*0.214))
+def calculate_font_location(output_size, font, main_text_line, draw):
+    return (int(output_size[0]/2 - draw.textsize(main_text_line, font)[0]/2), int(output_size[1]*0.214 - draw.textsize(text_height_example_string, font)[1]*0.214))
 
 
-def calculate_centred_font_location(output_size, font, main_text_line):
-    return (int(output_size[0]/2 - font.getsize(main_text_line)[0]/2), int(output_size[1]/2 - font.getsize(main_text_line)[1]/2))
+def calculate_centred_font_location(output_size, font, main_text_line, draw):
+    return (int(output_size[0]/2 - draw.textsize(main_text_line, font)[0]/2), int(output_size[1]/2 - draw.textsize(main_text_line, font)[1]/2))
 
 
 def get_test_image_1():
@@ -181,15 +181,15 @@ def main():
                 # Calculate maximum font size. Increase size until width of text exceeds defined max area,
                 # or height of an example text with no dangling letters, e.g. "Genre Glitch", at that size
                 # exceeds defined maximum.
-                while (font.getsize(main_text_line)[0] < max_area and font.getsize(text_height_example_string)[1] < max_height):
+                draw = ImageDraw.Draw(cover_image)
+                while (draw.textsize(main_text_line, font)[0] < max_area and draw.textsize(text_height_example_string, font)[1] < max_height):
                     size += 1
                     font = ImageFont.truetype('CircularStd-Bold.otf', size)
-                draw = ImageDraw.Draw(cover_image)
                 if cover.get('centre-text'):
-                    text_location = calculate_centred_font_location(output_size, font, main_text_line)
+                    text_location = calculate_centred_font_location(output_size, font, main_text_line, draw)
                 else:
-                    text_location = calculate_font_location(output_size, font, main_text_line)
-                draw.text(text_location, main_text_line, cover.get('font-colour', 'white'), font)
+                    text_location = calculate_font_location(output_size, font, main_text_line, draw)
+                draw.text(text_location, main_text_line, cover.get('font-colour', 'white'), font, align="center")
         except IOError:
             print("Unable to load image")
             sys.exit(1)
