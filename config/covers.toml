@@ -5,7 +5,7 @@ output-size = 800
 main-text = "Yamaoka Work"
 bg-image = "sh-toilet2.jpg"
 colour-gradient = "dull"
-gradient-opacity=5
+gradient-opacity = 5
 do-not-greyscale = true
 #font-colour = "#C9D6FF"
 font-colour = "#E2E2E2"
@@ -32,9 +32,8 @@ use-white-logo = true
 main-text = "Christmas"
 bg-image = "christmas-tree.jpg"
 colour-gradient = "christmas"
-font-colour = "white"
 do-not-greyscale = true
-gradient-opacity=30
+gradient-opacity = 30
 centre-text = true
 
 
@@ -45,22 +44,29 @@ bg-image = "wwe-dor.jpg"
 main-text = "BBQ"
 bg-image = "bbq.jpg"
 
+[[cover]]
+main-text = "Babymetal"
+sub-text = "23/02/2020"
+bg-image = "babymetal.jpg"
 
 [[cover]]
-main-text = "BBQ"
-bg-image = "bbq.jpg"
-
-
-[[cover]]
-main-text = "BBQ"
-bg-image = "bbq.jpg"
-
-
-[[cover]]
-main-text = "BBQ"
-bg-image = "bbq.jpg"
-
+main-text = "Creeper"
+sub-text = "01/11/2018"
+bg-image = "creeper.jpg"
+logo-opacity = 40
+use-white-logo = true
+colour-gradient = "lizard"
+gradient-opacity = 15
+do-not-greyscale = true
 
 [[cover]]
-main-text = "BBQ"
-bg-image = "bbq.jpg"
+main-text = "The Regrettes"
+sub-text = "08/11/2019"
+bg-image = "regrettes.jpg"
+use-white-logo = true
+logo-opacity = 30
+
+[[cover]]
+main-text = "Screaming Females"
+sub-text = "11/09/2018"
+bg-image = "scream.jpg"

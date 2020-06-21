@@ -37,12 +37,8 @@ def get_logo_size(output_size):
     return (size_px, size_px)
 
 
-def get_logo_alpha_int():
-    return int((logo_transparency_percentage * 255)/100)
-
-
-def get_logo_alpha_ratio():
-    return logo_transparency_percentage/100
+def get_logo_alpha_ratio(logo_transparency):
+    return logo_transparency/100
 
 
 def get_scaled_size(output_size, scale_percentage):
@@ -51,11 +47,11 @@ def get_scaled_size(output_size, scale_percentage):
     return (size_px, size_px)
 
 
-def resize_and_fade_logo(logo, logo_size, output_size, padded_logo_location):
+def resize_and_fade_logo(logo, logo_size, output_size, padded_logo_location, logo_opacity):
     logo = ImageOps.fit(logo, logo_size, Image.ANTIALIAS)
     base = Image.new('RGBA', output_size, (0, 0, 0, 0))
     base.paste(logo, padded_logo_location, logo)
-    base = Image.blend(Image.new('RGBA', output_size, (0, 0, 0, 0)), base, get_logo_alpha_ratio())
+    base = Image.blend(Image.new('RGBA', output_size, (0, 0, 0, 0)), base, get_logo_alpha_ratio(logo_opacity))
     return base
 
 
@@ -160,8 +156,8 @@ def main(show=False, test=""):
     logo_size = get_logo_size(output_size)
     padded_logo_location = get_logo_location(output_size)
 
-    w_base = resize_and_fade_logo(get_white_logo(), logo_size, output_size, padded_logo_location)
-    b_base = resize_and_fade_logo(get_black_logo(), logo_size, output_size, padded_logo_location)
+    w_base = resize_and_fade_logo(get_white_logo(), logo_size, output_size, padded_logo_location, logo_transparency_percentage)
+    b_base = resize_and_fade_logo(get_black_logo(), logo_size, output_size, padded_logo_location, logo_transparency_percentage)
 
     if test != "":
         test_image = get_test_image(output_size, test)
@@ -201,9 +197,17 @@ def main(show=False, test=""):
 
             # Composite the logo watermark on top, black logo as default
             if cover.get('use-white-logo'):
-                cover_image = Image.alpha_composite(cover_image, w_base)
+                if cover.get('logo-opacity'):
+                    cover_image = Image.alpha_composite(cover_image,
+                    resize_and_fade_logo(get_white_logo(), logo_size, output_size, padded_logo_location, cover.get('logo-opacity')))
+                else:
+                    cover_image = Image.alpha_composite(cover_image, w_base)
             else:
-                cover_image = Image.alpha_composite(cover_image, b_base)
+                if cover.get('logo-opacity'):
+                    cover_image = Image.alpha_composite(cover_image,
+                    resize_and_fade_logo(get_black_logo(), logo_size, output_size, padded_logo_location, cover.get('logo-opacity')))
+                else:
+                    cover_image = Image.alpha_composite(cover_image, b_base)
 
             # Write text
             if cover.get('main-text'):
@@ -230,7 +234,11 @@ def main(show=False, test=""):
 
         if show:
             cover_image.show()
-        
+        else:
+            if not os.path.exists(os.path.join(get_project_root(), 'images', 'covers')):
+                os.makedirs(os.path.join(get_project_root(), 'images', 'covers'))
+            cover_image.convert("RGB").save(os.path.join(get_project_root(), 'images', 'covers', cover.get('main-text', cover['bg-image']) + ".jpg"), quality=95)
+    
         if test_image is not None:
             Image.blend(cover_image, test_image, 0.65).show()
 
