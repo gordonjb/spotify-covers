@@ -29,8 +29,38 @@ position = "bottom"
 use-white-logo = true
 
 [[cover]]
-main-text = "Have yourself\na tolerable Christmas"
+main-text = "Christmas"
 bg-image = "christmas-tree.jpg"
 colour-gradient = "christmas"
-#font-colour = "#C9D6FF"
+font-colour = "white"
 do-not-greyscale = true
+gradient-opacity=30
+centre-text = true
+
+
+[[cover]]
+bg-image = "wwe-dor.jpg"
+
+[[cover]]
+main-text = "BBQ"
+bg-image = "bbq.jpg"
+
+
+[[cover]]
+main-text = "BBQ"
+bg-image = "bbq.jpg"
+
+
+[[cover]]
+main-text = "BBQ"
+bg-image = "bbq.jpg"
+
+
+[[cover]]
+main-text = "BBQ"
+bg-image = "bbq.jpg"
+
+
+[[cover]]
+main-text = "BBQ"
+bg-image = "bbq.jpg"

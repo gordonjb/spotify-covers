@@ -104,6 +104,17 @@ def get_test_image_3():
     return Image.open(os.path.join(get_project_root(), 'images', 'test', 'test_3.jpg'))
 
 
+def get_test_image(output_size, test):
+    if test == "1":
+        return resize_and_show_test_image(get_test_image_1(), output_size)
+    elif test == "1-solid":
+        return resize_and_show_test_image(get_test_image_1_solid(), output_size)
+    elif test == "2":
+        return resize_and_show_test_image(get_test_image_2(), output_size)
+    elif test == "3":
+        return resize_and_show_test_image(get_test_image_3(), output_size)
+
+
 def get_white_logo():
     return Image.open(os.path.join(get_project_root(), 'images', 'logo', 'Spotify_Icon_RGB_White.png'))
 
@@ -120,7 +131,27 @@ def get_cover_image(cover):
     return Image.open(os.path.join(get_project_root(), 'images', cover['bg-image']))
 
 
-def main():
+def show():
+    main(show=True)
+
+
+def test1():
+    main(show=True, test="1")
+
+
+def test1_solid():
+    main(show=True, test="1-solid")
+
+
+def test2():
+    main(show=True, test="2")
+
+
+def test3():
+    main(show=True, test="3")
+
+
+def main(show=False, test=""):
     doc = loads(open(
         os.path.join(get_project_root(), 'config', 'covers.toml'), ).read())
 
@@ -132,7 +163,10 @@ def main():
     w_base = resize_and_fade_logo(get_white_logo(), logo_size, output_size, padded_logo_location)
     b_base = resize_and_fade_logo(get_black_logo(), logo_size, output_size, padded_logo_location)
 
-    #another_test_image = resize_and_show_test_image(get_test_image_3(), output_size)
+    if test != "":
+        test_image = get_test_image(output_size, test)
+    else:
+        test_image = None
 
     for cover in doc['cover']:
         try:
@@ -194,8 +228,11 @@ def main():
             print("Unable to load image")
             sys.exit(1)
 
-        cover_image.show()
-        #Image.blend(cover_image, another_test_image, 0.65).show()
+        if show:
+            cover_image.show()
+        
+        if test_image is not None:
+            Image.blend(cover_image, test_image, 0.65).show()
 
 
 if __name__ == "__main__":

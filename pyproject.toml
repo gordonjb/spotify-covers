@@ -16,6 +16,12 @@ rope = "^0.17.0"
 
 [tool.poetry.scripts]
 covers = "spotify_covers.covers:main"
+show = "spotify_covers.covers:show"
+test1 = "spotify_covers.covers:test1"
+test1-s = "spotify_covers.covers:test1_solid"
+test2 = "spotify_covers.covers:test2"
+test3 = "spotify_covers.covers:test3"
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
