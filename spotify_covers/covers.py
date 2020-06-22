@@ -12,6 +12,8 @@ logo_size_percentage = 7.4
 logo_transparency_percentage = 20
 max_text_width_percentage = 85
 max_text_height_percentage = 8.5
+max_sub_text_height_percentage = 4
+sub_text_padding_percentage = 1
 text_height_example_string = "Genre Glitch"
 
 
@@ -25,10 +27,21 @@ def get_text_height(output_size):
     return int(max_text_area_ratio * output_size[0])
 
 
+def get_sub_text_height(output_size):
+    max_text_area_ratio = max_sub_text_height_percentage/100
+    return int(max_text_area_ratio * output_size[0])
+
+
 def get_logo_location(output_size):
     logo_padding_ratio = logo_padding_percentage/100
     padding_px = int(logo_padding_ratio * output_size[0])
     return (padding_px, padding_px)
+
+
+def get_padding_height(output_size):
+    sub_text_padding_ratio = sub_text_padding_percentage/100
+    padding_px = int(sub_text_padding_ratio * output_size[0])
+    return padding_px
 
 
 def get_logo_size(output_size):
@@ -77,11 +90,13 @@ def resize_and_show_test_image(test_image, output_size):
 
 
 def calculate_font_location(output_size, font, main_text_line, draw):
-    return (int(output_size[0]/2 - draw.textsize(main_text_line, font)[0]/2), int(output_size[1]*0.214 - draw.textsize(text_height_example_string, font)[1]*0.214))
+    return (int(output_size[0]/2 - draw.textsize(main_text_line, font)[0]/2),
+            int(output_size[1]*0.214 - draw.textsize(text_height_example_string, font)[1]*0.214))
 
 
 def calculate_centred_font_location(output_size, font, main_text_line, draw):
-    return (int(output_size[0]/2 - draw.textsize(main_text_line, font)[0]/2), int(output_size[1]/2 - draw.textsize(main_text_line, font)[1]/2))
+    return (int(output_size[0]/2 - draw.textsize(main_text_line, font)[0]/2),
+            int(output_size[1]/2 - draw.textsize(main_text_line, font)[1]/2))
 
 
 def get_test_image_1():
@@ -223,11 +238,36 @@ def main(show=False, test=""):
                 while (draw.textsize(main_text_line, font)[0] < max_area and draw.textsize(text_height_example_string, font)[1] < max_height):
                     size += 1
                     font = ImageFont.truetype('CircularStd-Bold.otf', size)
+                # Put in a variable so sub-text can use to calculate area already covered
+                main_text_size = draw.textsize(main_text_line, font)
                 if cover.get('centre-text'):
                     text_location = calculate_centred_font_location(output_size, font, main_text_line, draw)
                 else:
                     text_location = calculate_font_location(output_size, font, main_text_line, draw)
                 draw.text(text_location, main_text_line, cover.get('font-colour', 'white'), font, align="center")
+
+            if cover.get('sub-text'):
+                size = 1
+                font = ImageFont.truetype('CircularStd-Bold.otf', size)
+                max_area = get_text_area(output_size)
+                max_height = get_sub_text_height(output_size)
+                main_text_line = cover.get('sub-text')
+                # Calculate maximum font size. Increase size until width of text exceeds defined max area,
+                # or height of an example text with no dangling letters, e.g. "Genre Glitch", at that size
+                # exceeds defined maximum.
+                draw = ImageDraw.Draw(cover_image)
+                while (draw.textsize(main_text_line, font)[0] < max_area and draw.textsize(text_height_example_string, font)[1] < max_height):
+                    size += 1
+                    font = ImageFont.truetype('CircularStd-Bold.otf', size)
+                if cover.get('sub-text-above'):
+                    main_start = text_location[1]
+                    sub_text_location = (int(output_size[0]/2 - draw.textsize(main_text_line, font)[0]/2), main_start - get_padding_height(output_size) - draw.textsize(text_height_example_string, font)[1])
+                else:
+                    main_end = text_location[1] + main_text_size[1]
+                    sub_text_location = (int(output_size[0]/2 - draw.textsize(main_text_line, font)[0]/2), get_padding_height(output_size) + main_end)
+
+                draw.text(sub_text_location, main_text_line, cover.get('sub-font-colour', 'white'), font, align="center")
+
         except IOError:
             print("Unable to load image")
             sys.exit(1)
