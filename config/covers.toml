@@ -7,7 +7,6 @@ bg-image = "sh-toilet2.jpg"
 colour-gradient = "dull"
 gradient-opacity = 5
 do-not-greyscale = true
-#font-colour = "#C9D6FF"
 font-colour = "#E2E2E2"
 
 [[cover]]
@@ -16,8 +15,6 @@ centre-text = true
 bg-image = "cd-pile.jpg"
 colour-gradient = "lizard"
 use-white-logo = true
-#do-not-greyscale = true
-#font-colour = "black"
 
 [[cover]]
 main-text = "Thumbs Up"
@@ -29,13 +26,14 @@ position = "bottom"
 use-white-logo = true
 
 [[cover]]
+sub-text = "Have yourself a tolerable"
 main-text = "Christmas"
+sub-text-above = true
 bg-image = "christmas-tree.jpg"
 colour-gradient = "christmas"
 do-not-greyscale = true
 gradient-opacity = 30
 centre-text = true
-
 
 [[cover]]
 bg-image = "wwe-dor.jpg"
@@ -70,3 +68,19 @@ logo-opacity = 30
 main-text = "Screaming Females"
 sub-text = "11/09/2018"
 bg-image = "scream.jpg"
+
+[[cover]]
+sub-text = "Google Play Music"
+main-text = "Triage"
+sub-text-above = true
+bg-image = "cd-pile.jpg"
+colour-gradient = "orange-coral"
+centre-text = true
+
+[[cover]]
+sub-text = "Christmas"
+main-text = "Triage"
+sub-text-above = true
+bg-image = "christmasmusic-2.jpg"
+colour-gradient = "christmas"
+centre-text = true
