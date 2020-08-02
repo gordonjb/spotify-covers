@@ -3,6 +3,8 @@
 from PIL import Image, ImageOps, ImageFont, ImageDraw
 from tomlkit import loads
 from spotify_covers.utils import get_project_root
+from pathvalidate import sanitize_filename
+import time
 import sys
 import os
 
@@ -163,6 +165,8 @@ def test3():
 
 
 def main(show=False, test=""):
+    start_time = time.time()
+
     doc = loads(open(
         os.path.join(get_project_root(), 'config', 'covers.toml'), ).read())
 
@@ -214,13 +218,13 @@ def main(show=False, test=""):
             if cover.get('use-white-logo'):
                 if cover.get('logo-opacity'):
                     cover_image = Image.alpha_composite(cover_image,
-                    resize_and_fade_logo(get_white_logo(), logo_size, output_size, padded_logo_location, cover.get('logo-opacity')))
+                        resize_and_fade_logo(get_white_logo(), logo_size, output_size, padded_logo_location, cover.get('logo-opacity')))
                 else:
                     cover_image = Image.alpha_composite(cover_image, w_base)
             else:
                 if cover.get('logo-opacity'):
                     cover_image = Image.alpha_composite(cover_image,
-                    resize_and_fade_logo(get_black_logo(), logo_size, output_size, padded_logo_location, cover.get('logo-opacity')))
+                        resize_and_fade_logo(get_black_logo(), logo_size, output_size, padded_logo_location, cover.get('logo-opacity')))
                 else:
                     cover_image = Image.alpha_composite(cover_image, b_base)
 
@@ -277,8 +281,28 @@ def main(show=False, test=""):
         else:
             if not os.path.exists(os.path.join(get_project_root(), 'images', 'covers')):
                 os.makedirs(os.path.join(get_project_root(), 'images', 'covers'))
-            cover_image.convert("RGB").save(os.path.join(get_project_root(), 'images', 'covers', cover.get('main-text', cover['bg-image']) + ".jpg"), quality=95)
-    
+
+            # Ensure unique filenames by first trying to append config strings, then appending numbers if the file still exists already
+            parts = [cover.get('main-text'), cover.get('sub-text'), cover.get('bg-image'), cover.get('colour-gradient')]
+            parts = [i for i in parts if i is not None]
+            i = 0
+            file_name = ""
+            while i < len(parts):
+                file_name += parts[i]
+                file_path = os.path.join(get_project_root(), 'images', 'covers', sanitize_filename(file_name + ".jpg"))
+                if os.path.exists(file_path) and os.path.getmtime(file_path) > start_time:
+                    i += 1
+                    file_name += "_"
+                else:
+                    break
+            else:
+                x = 0
+                while os.path.exists(file_path) and os.path.getmtime(file_path) > start_time:
+                    x += 1
+                    file_path = os.path.join(get_project_root(), 'images', 'covers', sanitize_filename(file_name + str(x) + ".jpg"))
+
+            cover_image.convert("RGB").save(file_path, quality=95)
+
         if test_image is not None:
             Image.blend(cover_image, test_image, 0.65).show()
 
