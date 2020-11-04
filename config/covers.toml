@@ -4,10 +4,11 @@ output-size = 800
 [[cover]]
 main-text = "Yamaoka Work"
 bg-image = "sh-toilet2.jpg"
-colour-gradient = "dull"
-gradient-opacity = 5
+colour-gradient = "pale-wood"
+gradient-opacity = 30
 do-not-greyscale = true
 font-colour = "#E2E2E2"
+logo-opacity = 40
 
 [[cover]]
 main-text = "Triage"
