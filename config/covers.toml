@@ -84,3 +84,13 @@ sub-text-above = true
 bg-image = "christmasmusic-2.jpg"
 colour-gradient = "christmas"
 centre-text = true
+
+[[cover]]
+sub-text = "Alex's Drum Stream"
+main-text = "Extra Life 2016"
+bg-image = "alex.jpeg"
+centre-text = true
+colour-gradient = "PureLust"
+gradient-opacity = 15
+use-white-logo = true
+logo-opacity = 30
