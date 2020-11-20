@@ -77,6 +77,9 @@ def scale_and_pad_cover(cover_image, output_size, scale, position):
     if position == "bottom":
         # Align towards the middle bottom of the image
         base.paste(padded, (int(output_size[0]/2 - s_width/2), int(output_size[0]*7/8 - s_height*7/8)), padded)
+    elif position == "from-bottom":
+        # Align touching the bottom of the image going up
+        base.paste(padded, (int(output_size[0]/2 - s_width/2), int(output_size[0] - s_height)), padded)
     else:
         # Center align
         base.paste(padded, (int(output_size[0]/2 - s_width/2), int(output_size[0]/2 - s_height/2)), padded)

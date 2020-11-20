@@ -95,3 +95,13 @@ colour-gradient = "PureLust"
 gradient-opacity = 15
 use-white-logo = true
 logo-opacity = 30
+
+[[cover]]
+main-text = "Landfill Indie"
+sub-text = "Top 50"
+bg-image = "landfill.png"
+font-colour = "#000000"
+sub-font-colour = "#000000"
+bg-colour = "white"
+scale = 100
+position = "bottom"
